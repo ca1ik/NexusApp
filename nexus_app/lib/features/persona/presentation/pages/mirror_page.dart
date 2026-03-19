@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:nexus_app/features/conversation/presentation/cubit/conversation_vector_cubit.dart';
@@ -102,49 +103,64 @@ class _MirrorPageState extends State<MirrorPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'THE MIRROR',
-            style: TextStyle(
+          Text(
+            AppStrings.theMirror(context),
+            style: const TextStyle(
               color: ThemeConstants.mirrorAccent,
               fontSize: 13,
               fontWeight: FontWeight.bold,
               letterSpacing: 3,
             ),
           ),
-          BlocBuilder<PersonaNexusBloc, PersonaNexusState>(
-            builder: (ctx, state) {
-              if (state is MirrorActive) {
-                final progress = state.fractureProgress;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '${state.interactionCount} / 500',
-                      style: const TextStyle(
-                        color: ThemeConstants.textSecondary,
-                        fontSize: 11,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    SizedBox(
-                      width: 80,
-                      child: LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: ThemeConstants.mirrorSurface,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          progress > 0.8
-                              ? ThemeConstants.fractureSecondary
-                              : ThemeConstants.mirrorPrimary,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.settings_rounded,
+                  color: ThemeConstants.textSecondary,
+                  size: 20,
+                ),
+                onPressed: () => Get.toNamed(AppRoutes.settings),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              const SizedBox(width: 12),
+              BlocBuilder<PersonaNexusBloc, PersonaNexusState>(
+                builder: (ctx, state) {
+                  if (state is MirrorActive) {
+                    final progress = state.fractureProgress;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${state.interactionCount} / 500',
+                          style: const TextStyle(
+                            color: ThemeConstants.textSecondary,
+                            fontSize: 11,
+                            letterSpacing: 1,
+                          ),
                         ),
-                        minHeight: 3,
-                      ),
-                    ),
-                  ],
-                );
-              }
-              return const SizedBox.shrink();
-            },
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: 80,
+                          child: LinearProgressIndicator(
+                            value: progress,
+                            backgroundColor: ThemeConstants.mirrorSurface,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              progress > 0.8
+                                  ? ThemeConstants.fractureSecondary
+                                  : ThemeConstants.mirrorPrimary,
+                            ),
+                            minHeight: 3,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -280,9 +296,9 @@ class _MirrorPageState extends State<MirrorPage> {
               maxLines: null,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => _sendMessage(context),
-              decoration: const InputDecoration(
-                hintText: 'Speak your truth...',
-                hintStyle: TextStyle(color: ThemeConstants.textDisabled),
+              decoration: InputDecoration(
+                hintText: AppStrings.speakYourTruth(context),
+                hintStyle: const TextStyle(color: ThemeConstants.textDisabled),
                 border: InputBorder.none,
                 isDense: true,
               ),

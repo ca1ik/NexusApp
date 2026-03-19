@@ -5,11 +5,12 @@ import 'package:nexus_app/features/auth/presentation/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required AuthRepository authRepository})
-    : _repo = authRepository,
-      super(const AuthInitial()) {
+      : _repo = authRepository,
+        super(const AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheck);
     on<SignInAnonymouslyRequested>(_onSignInAnonymously);
     on<SignInWithEmailRequested>(_onSignInWithEmail);
+    on<SignUpWithEmailRequested>(_onSignUpWithEmail);
     on<SignOutRequested>(_onSignOut);
   }
 
@@ -61,5 +62,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     await _repo.signOut();
     emit(const AuthUnauthenticated());
+  }
+
+  Future<void> _onSignUpWithEmail(
+    SignUpWithEmailRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await _repo.signUpWithEmailAndPassword(
+      email: event.email,
+      password: event.password,
+    );
+    result.fold(
+      (f) => emit(AuthError(f.message)),
+      (u) => emit(AuthAuthenticated(u)),
+    );
   }
 }

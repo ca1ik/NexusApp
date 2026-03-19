@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_pages.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/di/injection.dart';
+import 'package:nexus_app/core/l10n/locale_provider.dart';
 import 'package:nexus_app/core/theme/theme_provider.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_event.dart';
@@ -18,8 +19,15 @@ class NexusApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<NexusThemeProvider>(
-      create: (_) => getIt<NexusThemeProvider>(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<NexusThemeProvider>(
+          create: (_) => getIt<NexusThemeProvider>(),
+        ),
+        ChangeNotifierProvider<NexusLocaleProvider>(
+          create: (_) => getIt<NexusLocaleProvider>(),
+        ),
+      ],
       child: Consumer<NexusThemeProvider>(
         builder: (_, themeProvider, __) => MultiBlocProvider(
           providers: [

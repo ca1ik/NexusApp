@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/persona/domain/entities/persona_entity.dart';
 import 'package:nexus_app/features/persona/presentation/bloc/persona_nexus_bloc.dart';
 import 'package:nexus_app/features/persona/presentation/bloc/persona_nexus_event.dart';
@@ -34,13 +35,12 @@ class _FracturePageState extends State<FracturePage>
       duration: const Duration(milliseconds: 600),
     );
 
-    _bgFlash =
-        ColorTween(
-          begin: ThemeConstants.fracturePrimary,
-          end: ThemeConstants.fractureBg,
-        ).animate(
-          CurvedAnimation(parent: _flashController, curve: Curves.easeInOut),
-        );
+    _bgFlash = ColorTween(
+      begin: ThemeConstants.fracturePrimary,
+      end: ThemeConstants.fractureBg,
+    ).animate(
+      CurvedAnimation(parent: _flashController, curve: Curves.easeInOut),
+    );
 
     // Trigger the blood-red flash on page mount
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -92,26 +92,23 @@ class _FracturePageState extends State<FracturePage>
   Widget _buildTitle() {
     return Column(
       children: [
-        const Text(
-              'THE FRACTURE',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: ThemeConstants.fractureSecondary,
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 6,
-              ),
-            )
-            .animate()
-            .fadeIn(duration: 800.ms, delay: 400.ms)
-            .shimmer(
+        Text(
+          AppStrings.theFracture(context),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: ThemeConstants.fractureSecondary,
+            fontSize: 28,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 6,
+          ),
+        ).animate().fadeIn(duration: 800.ms, delay: 400.ms).shimmer(
               duration: 1600.ms,
               delay: 600.ms,
               color: ThemeConstants.fracturePrimary.withAlpha(200),
             ),
         const SizedBox(height: 12),
-        const Text(
-          'You have outgrown your first self.\nNow — who do you become?',
+        Text(
+          AppStrings.fractureSubtitle(context),
           textAlign: TextAlign.center,
           style: TextStyle(
             color: ThemeConstants.textSecondary,
@@ -136,10 +133,10 @@ class _FracturePageState extends State<FracturePage>
                 .fadeIn(duration: 800.ms, delay: 600.ms)
                 .slideX(begin: -0.4, curve: Curves.easeOut),
             const SizedBox(height: 12),
-            const Text(
-              'SHADOW\nNEXUS',
+            Text(
+              AppStrings.shadowNexus(context),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: ThemeConstants.shadowNexusColor,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -164,11 +161,11 @@ class _FracturePageState extends State<FracturePage>
             ),
           ),
         ).animate().scaleY(
-          begin: 0,
-          duration: 600.ms,
-          delay: 800.ms,
-          curve: Curves.easeOut,
-        ),
+              begin: 0,
+              duration: 600.ms,
+              delay: 800.ms,
+              curve: Curves.easeOut,
+            ),
 
         // Prime Nexus — the ally
         Column(
@@ -178,10 +175,10 @@ class _FracturePageState extends State<FracturePage>
                 .fadeIn(duration: 800.ms, delay: 700.ms)
                 .slideX(begin: 0.4, curve: Curves.easeOut),
             const SizedBox(height: 12),
-            const Text(
-              'PRIME\nNEXUS',
+            Text(
+              AppStrings.primeNexus(context),
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 color: ThemeConstants.primeNexusColor,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -199,7 +196,7 @@ class _FracturePageState extends State<FracturePage>
       children: [
         // BATTLE — unlock Shadow Nexus
         GlowingButtonWidget(
-          label: '⚔  BATTLE',
+          label: AppStrings.battle(context),
           glowColor: ThemeConstants.shadowNexusColor,
           onTap: () {
             context.read<PersonaNexusBloc>().add(const ShadowPersonaChosen());
@@ -210,7 +207,7 @@ class _FracturePageState extends State<FracturePage>
 
         // ALLY — unlock Prime Nexus
         GlowingButtonWidget(
-          label: '✦  ALLY',
+          label: AppStrings.allyLabel(context),
           glowColor: ThemeConstants.primeNexusColor,
           onTap: () {
             context.read<PersonaNexusBloc>().add(const PrimePersonaChosen());
@@ -225,7 +222,7 @@ class _FracturePageState extends State<FracturePage>
             return TextButton(
               onPressed: () => Get.toNamed(AppRoutes.arena),
               child: Text(
-                'ENTER THE ARENA',
+                AppStrings.enterTheArena(context),
                 style: TextStyle(
                   color: ThemeConstants.arenaAccent.withAlpha(180),
                   fontSize: 12,

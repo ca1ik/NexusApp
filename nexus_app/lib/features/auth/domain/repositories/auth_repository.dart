@@ -9,6 +9,10 @@ abstract interface class AuthRepository {
     required String email,
     required String password,
   });
+  Future<Either<AuthFailure, UserEntity>> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
   Future<Either<AuthFailure, void>> signOut();
   Future<Either<AuthFailure, UserEntity>> getCurrentUser();
   Future<Either<AuthFailure, void>> incrementInteractionCount(String userId);

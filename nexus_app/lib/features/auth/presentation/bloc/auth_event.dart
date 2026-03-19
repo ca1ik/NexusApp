@@ -28,3 +28,13 @@ final class SignInWithEmailRequested extends AuthEvent {
 final class SignOutRequested extends AuthEvent {
   const SignOutRequested();
 }
+
+final class SignUpWithEmailRequested extends AuthEvent {
+  const SignUpWithEmailRequested({required this.email, required this.password});
+
+  final String email;
+  final String password;
+
+  @override
+  List<Object?> get props => [email, password];
+}

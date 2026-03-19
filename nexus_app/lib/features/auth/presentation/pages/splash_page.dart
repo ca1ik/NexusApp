@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:nexus_app/features/persona/presentation/bloc/persona_nexus_bloc.dart';
@@ -51,11 +52,14 @@ class SplashPage extends StatelessWidget {
                   color: ThemeConstants.mirrorAccent,
                 ),
               ).animate(onPlay: (c) => c.repeat(reverse: true)).scaleXY(
-                  begin: 0.92, end: 1.08, duration: const Duration(seconds: 2),),
+                    begin: 0.92,
+                    end: 1.08,
+                    duration: const Duration(seconds: 2),
+                  ),
               const SizedBox(height: 32),
-              const Text(
-                'THE NEXUS OF POWER',
-                style: TextStyle(
+              Text(
+                AppStrings.nexusOfPower(context),
+                style: const TextStyle(
                   color: ThemeConstants.mirrorAccent,
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -63,9 +67,9 @@ class SplashPage extends StatelessWidget {
                 ),
               ).animate().fadeIn(delay: 300.ms, duration: 800.ms),
               const SizedBox(height: 8),
-              const Text(
-                'INITIALIZING...',
-                style: TextStyle(
+              Text(
+                AppStrings.initializing(context),
+                style: const TextStyle(
                   color: ThemeConstants.textSecondary,
                   fontSize: 12,
                   letterSpacing: 3,

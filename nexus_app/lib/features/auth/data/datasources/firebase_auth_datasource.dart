@@ -10,6 +10,10 @@ abstract interface class FirebaseAuthDataSource {
     required String email,
     required String password,
   });
+  Future<UserEntity> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
   Future<void> signOut();
   Future<UserEntity> getCurrentUser();
   Future<void> incrementInteractionCount(String userId);
@@ -17,16 +21,16 @@ abstract interface class FirebaseAuthDataSource {
 
 class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   FirebaseAuthDataSourceImpl({FirebaseAuth? auth, FirebaseFirestore? firestore})
-    : _auth = auth ?? FirebaseAuth.instance,
-      _firestore = firestore ?? FirebaseFirestore.instance;
+      : _auth = auth ?? FirebaseAuth.instance,
+        _firestore = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
 
   @override
   Stream<UserEntity?> get authStateChanges => _auth.authStateChanges().asyncMap(
-    (u) async => u == null ? null : _resolveUser(u),
-  );
+        (u) async => u == null ? null : _resolveUser(u),
+      );
 
   @override
   Future<UserEntity> signInAnonymously() async {
@@ -51,6 +55,22 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
       return _resolveUser(cred.user!);
     } on FirebaseAuthException catch (e) {
       throw AuthException(message: e.message ?? 'Sign-in failed');
+    }
+  }
+
+  @override
+  Future<UserEntity> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final cred = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return _resolveUser(cred.user!);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(message: e.message ?? 'Sign-up failed');
     }
   }
 
@@ -105,15 +125,15 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
   }
 
   UserEntity _fromFirestore(String uid, Map<String, dynamic> d) => UserEntity(
-    id: uid,
-    email: d['email'] as String? ?? '',
-    displayName: d['displayName'] as String? ?? 'Seeker',
-    interactionCount: d['interactionCount'] as int? ?? 0,
-    unlockedPersonaIds: List<String>.from(
-      d['unlockedPersonaIds'] as List? ?? [],
-    ),
-    hasArenaAccess: d['hasArenaAccess'] as bool? ?? false,
-    hasLegacyAccess: d['hasLegacyAccess'] as bool? ?? false,
-    createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-  );
+        id: uid,
+        email: d['email'] as String? ?? '',
+        displayName: d['displayName'] as String? ?? 'Seeker',
+        interactionCount: d['interactionCount'] as int? ?? 0,
+        unlockedPersonaIds: List<String>.from(
+          d['unlockedPersonaIds'] as List? ?? [],
+        ),
+        hasArenaAccess: d['hasArenaAccess'] as bool? ?? false,
+        hasLegacyAccess: d['hasLegacyAccess'] as bool? ?? false,
+        createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
 }

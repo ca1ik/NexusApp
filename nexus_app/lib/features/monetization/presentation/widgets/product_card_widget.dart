@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/monetization/domain/entities/product_entity.dart';
 import 'package:nexus_app/features/monetization/presentation/bloc/monetization_bloc.dart';
 import 'package:nexus_app/features/monetization/presentation/bloc/monetization_event.dart';
@@ -54,8 +55,8 @@ class ProductCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           onTap: () {
             context.read<MonetizationBloc>().add(
-              PurchaseProduct(product.productId),
-            );
+                  PurchaseProduct(product.productId),
+                );
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -80,7 +81,7 @@ class ProductCardWidget extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'MOST POPULAR',
+                            AppStrings.mostPopular(context),
                             style: TextStyle(
                               color: _glowColor,
                               fontSize: 9,
@@ -124,9 +125,9 @@ class ProductCardWidget extends StatelessWidget {
                       ),
                     ),
                     if (product.isSubscription)
-                      const Text(
-                        'per period',
-                        style: TextStyle(
+                      Text(
+                        AppStrings.perPeriod(context),
+                        style: const TextStyle(
                           color: ThemeConstants.textDisabled,
                           fontSize: 11,
                         ),

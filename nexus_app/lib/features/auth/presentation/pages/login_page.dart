@@ -4,12 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:nexus_app/shared/widgets/glowing_button_widget.dart';
 
-/// Login page — "Enter as a Seeker" (anonymous) or email sign-in.
+/// Login page — guest entry, email sign-in, or sign-up.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -20,12 +21,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _showEmailForm = false;
+  bool _isSignUpMode = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -37,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
           Get.offAllNamed(AppRoutes.mirror);
         } else if (state is AuthError) {
           Get.snackbar(
-            'Access Denied',
+            AppStrings.accessDenied(context),
             state.message,
             backgroundColor: ThemeConstants.fracturePrimary.withAlpha(200),
             colorText: Colors.white,
@@ -56,10 +60,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 80),
 
                 // Title
-                const Text(
-                  'THE NEXUS\nOF POWER',
+                Text(
+                  AppStrings.appTitle(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: ThemeConstants.mirrorAccent,
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -69,10 +73,10 @@ class _LoginPageState extends State<LoginPage> {
                 ).animate().fadeIn(duration: 800.ms).slideY(begin: -0.2),
 
                 const SizedBox(height: 16),
-                const Text(
-                  '"Create your best version.\nBattle it. Or ally with it."',
+                Text(
+                  AppStrings.appTagline(context),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: ThemeConstants.textSecondary,
                     fontSize: 14,
                     fontStyle: FontStyle.italic,
@@ -103,20 +107,22 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ).animate(onPlay: (c) => c.repeat(reverse: true)).scaleXY(
-                    begin: 0.88,
-                    end: 1.12,
-                    duration: const Duration(seconds: 3),),
+                      begin: 0.88,
+                      end: 1.12,
+                      duration: const Duration(seconds: 3),
+                    ),
 
                 const SizedBox(height: 64),
 
-                // Anonymous entry
+                // Auth buttons
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (ctx, state) {
                     final isLoading = state is AuthLoading;
                     return Column(
                       children: [
+                        // Guest entry
                         GlowingButtonWidget(
-                          label: 'ENTER AS A SEEKER',
+                          label: AppStrings.enterAsGuest(context),
                           glowColor: ThemeConstants.mirrorPrimary,
                           isLoading: isLoading,
                           onTap: () => ctx.read<AuthBloc>().add(
@@ -125,12 +131,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 16),
                         TextButton(
-                          onPressed: () =>
-                              setState(() => _showEmailForm = !_showEmailForm),
+                          onPressed: () => setState(() {
+                            _showEmailForm = !_showEmailForm;
+                            if (!_showEmailForm) _isSignUpMode = false;
+                          }),
                           child: Text(
                             _showEmailForm
-                                ? 'HIDE SIGN IN'
-                                : 'SIGN IN WITH EMAIL',
+                                ? AppStrings.hideSignIn(context)
+                                : AppStrings.signInWithEmail(context),
                             style: const TextStyle(
                               color: ThemeConstants.mirrorAccent,
                               letterSpacing: 1.5,
@@ -145,9 +153,9 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(
                               color: ThemeConstants.textPrimary,
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Email',
-                              prefixIcon: Icon(
+                            decoration: InputDecoration(
+                              hintText: AppStrings.email(context),
+                              prefixIcon: const Icon(
                                 Icons.email_outlined,
                                 color: ThemeConstants.mirrorPrimary,
                               ),
@@ -160,25 +168,83 @@ class _LoginPageState extends State<LoginPage> {
                             style: const TextStyle(
                               color: ThemeConstants.textPrimary,
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Password',
-                              prefixIcon: Icon(
+                            decoration: InputDecoration(
+                              hintText: AppStrings.password(context),
+                              prefixIcon: const Icon(
                                 Icons.lock_outline,
                                 color: ThemeConstants.mirrorPrimary,
                               ),
                             ),
                           ),
+                          if (_isSignUpMode) ...[
+                            const SizedBox(height: 12),
+                            TextField(
+                              controller: _confirmPasswordController,
+                              obscureText: true,
+                              style: const TextStyle(
+                                color: ThemeConstants.textPrimary,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: AppStrings.confirmPassword(context),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: ThemeConstants.mirrorPrimary,
+                                ),
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 16),
                           GlowingButtonWidget(
-                            label: 'ENTER',
+                            label: _isSignUpMode
+                                ? AppStrings.signUp(context)
+                                : AppStrings.signIn(context),
                             glowColor: ThemeConstants.mirrorSecondary,
                             isLoading: isLoading,
-                            onTap: () => ctx.read<AuthBloc>().add(
-                                  SignInWithEmailRequested(
-                                    email: _emailController.text.trim(),
-                                    password: _passwordController.text,
-                                  ),
-                                ),
+                            onTap: () {
+                              if (_isSignUpMode) {
+                                if (_passwordController.text !=
+                                    _confirmPasswordController.text) {
+                                  Get.snackbar(
+                                    AppStrings.accessDenied(context),
+                                    AppStrings.passwordsDoNotMatch(context),
+                                    backgroundColor: ThemeConstants
+                                        .fracturePrimary
+                                        .withAlpha(200),
+                                    colorText: Colors.white,
+                                    snackPosition: SnackPosition.BOTTOM,
+                                  );
+                                  return;
+                                }
+                                ctx.read<AuthBloc>().add(
+                                      SignUpWithEmailRequested(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      ),
+                                    );
+                              } else {
+                                ctx.read<AuthBloc>().add(
+                                      SignInWithEmailRequested(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          TextButton(
+                            onPressed: () =>
+                                setState(() => _isSignUpMode = !_isSignUpMode),
+                            child: Text(
+                              _isSignUpMode
+                                  ? AppStrings.alreadyHaveAccount(context)
+                                  : AppStrings.noAccount(context),
+                              style: const TextStyle(
+                                color: ThemeConstants.textSecondary,
+                                fontSize: 12,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                           ),
                         ],
                       ],
@@ -187,9 +253,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 const SizedBox(height: 40),
-                const Text(
-                  'Your journey into the self begins here.',
-                  style: TextStyle(
+                Text(
+                  AppStrings.journeyBegins(context),
+                  style: const TextStyle(
                     color: ThemeConstants.textDisabled,
                     fontSize: 12,
                     letterSpacing: 1,

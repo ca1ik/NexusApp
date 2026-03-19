@@ -8,6 +8,7 @@ import 'package:nexus_app/features/monetization/presentation/bloc/monetization_b
 import 'package:nexus_app/features/monetization/presentation/bloc/monetization_event.dart';
 import 'package:nexus_app/features/monetization/presentation/bloc/monetization_state.dart';
 import 'package:nexus_app/features/monetization/presentation/widgets/product_card_widget.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:shimmer/shimmer.dart';
 
 /// The Paywall — unlocks premium tiers.
@@ -21,8 +22,8 @@ class PaywallPage extends StatelessWidget {
       listener: (ctx, state) {
         if (state is PurchaseSuccess) {
           Get.snackbar(
-            'ACCESS GRANTED',
-            'Your nexus has been upgraded.',
+            AppStrings.accessGranted(ctx),
+            AppStrings.nexusUpgraded(ctx),
             backgroundColor: ThemeConstants.arenaAccent.withAlpha(200),
             colorText: Colors.black,
             snackPosition: SnackPosition.TOP,
@@ -31,7 +32,7 @@ class PaywallPage extends StatelessWidget {
           ctx.read<MonetizationBloc>().add(const LoadOfferings());
         } else if (state is MonetizationError) {
           Get.snackbar(
-            'TRANSACTION DENIED',
+            AppStrings.transactionDenied(ctx),
             state.message,
             backgroundColor: ThemeConstants.fracturePrimary.withAlpha(200),
             colorText: Colors.white,
@@ -74,10 +75,10 @@ class PaywallPage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          const Text(
-            'UNLOCK THE NEXUS',
+          Text(
+            AppStrings.unlockTheNexus(context),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: ThemeConstants.arenaAccent,
               fontSize: 24,
               fontWeight: FontWeight.w900,
@@ -85,10 +86,10 @@ class PaywallPage extends StatelessWidget {
             ),
           ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.2),
           const SizedBox(height: 8),
-          const Text(
-            'Every level of power has its price.',
+          Text(
+            AppStrings.everyLevelHasPrice(context),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: ThemeConstants.textSecondary,
               fontSize: 14,
               fontStyle: FontStyle.italic,
@@ -183,19 +184,19 @@ class PaywallPage extends StatelessWidget {
             onPressed: () {
               context.read<MonetizationBloc>().add(const RestorePurchases());
             },
-            child: const Text(
-              'Restore Purchases',
-              style: TextStyle(
+            child: Text(
+              AppStrings.restorePurchases(context),
+              style: const TextStyle(
                 color: ThemeConstants.textDisabled,
                 fontSize: 12,
               ),
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Subscriptions auto-renew unless cancelled 24h before period end.',
+          Text(
+            AppStrings.subscriptionDisclaimer(context),
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: ThemeConstants.textDisabled,
               fontSize: 10,
               height: 1.5,

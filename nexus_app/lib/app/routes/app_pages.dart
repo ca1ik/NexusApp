@@ -7,6 +7,7 @@ import 'package:nexus_app/features/monetization/presentation/pages/paywall_page.
 import 'package:nexus_app/features/persona/presentation/pages/arena_page.dart';
 import 'package:nexus_app/features/persona/presentation/pages/fracture_page.dart';
 import 'package:nexus_app/features/persona/presentation/pages/mirror_page.dart';
+import 'package:nexus_app/features/settings/presentation/pages/settings_page.dart';
 
 abstract final class AppPages {
   static final List<GetPage<Widget>> routes = [
@@ -41,6 +42,11 @@ abstract final class AppPages {
       name: AppRoutes.paywall,
       page: () => const PaywallPage(),
       transition: Transition.downToUp,
+    ),
+    GetPage<Widget>(
+      name: AppRoutes.settings,
+      page: () => const SettingsPage(),
+      transition: Transition.rightToLeft,
     ),
   ];
 }

@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:nexus_app/core/l10n/locale_provider.dart';
 import 'package:nexus_app/core/network/api_client.dart';
 import 'package:nexus_app/core/platform/haptic_channel.dart';
 import 'package:nexus_app/core/theme/theme_provider.dart';
@@ -35,6 +36,8 @@ void configureDependencies() {
     )
     // ── Theme ───────────────────────────────────────────────────────────────
     ..registerLazySingleton<NexusThemeProvider>(() => NexusThemeProvider())
+    // ── Locale ──────────────────────────────────────────────────────────────
+    ..registerLazySingleton<NexusLocaleProvider>(() => NexusLocaleProvider())
     // ── Auth ────────────────────────────────────────────────────────────────
     ..registerLazySingleton<FirebaseAuthDataSource>(
       () => FirebaseAuthDataSourceImpl(),

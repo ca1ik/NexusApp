@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:nexus_app/app/routes/app_routes.dart';
 import 'package:nexus_app/core/constants/theme_constants.dart';
+import 'package:nexus_app/core/l10n/app_strings.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:nexus_app/features/auth/presentation/bloc/auth_state.dart';
 import 'package:nexus_app/features/conversation/presentation/cubit/conversation_vector_cubit.dart';
@@ -119,9 +120,9 @@ class _ArenaPageState extends State<ArenaPage> {
             constraints: const BoxConstraints(),
           ),
           const SizedBox(width: 12),
-          const Text(
-            'THE ARENA',
-            style: TextStyle(
+          Text(
+            AppStrings.theArena(context),
+            style: const TextStyle(
               color: ThemeConstants.arenaAccent,
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -199,7 +200,7 @@ class _ArenaPageState extends State<ArenaPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'TENSION',
+                    AppStrings.tension(context),
                     style: TextStyle(
                       color: meterColor,
                       fontSize: 10,
@@ -251,10 +252,10 @@ class _ArenaPageState extends State<ArenaPage> {
         }
 
         if (state is! ConversationLoaded) {
-          return const Center(
+          return Center(
             child: Text(
-              'Select a scenario to begin.',
-              style: TextStyle(
+              AppStrings.selectScenario(context),
+              style: const TextStyle(
                 color: ThemeConstants.textDisabled,
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
@@ -360,7 +361,7 @@ class _ArenaPageState extends State<ArenaPage> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               child: GlowingButtonWidget(
-                label: 'ANALYZE WEAKNESS',
+                label: AppStrings.analyzeWeakness(context),
                 glowColor: ThemeConstants.arenaAccent,
                 isLocked: !hasAccess,
                 onTap: hasAccess
@@ -389,9 +390,10 @@ class _ArenaPageState extends State<ArenaPage> {
                   maxLines: null,
                   textInputAction: TextInputAction.send,
                   onSubmitted: (_) => _sendMessage(context),
-                  decoration: const InputDecoration(
-                    hintText: 'Mount your argument...',
-                    hintStyle: TextStyle(color: ThemeConstants.textDisabled),
+                  decoration: InputDecoration(
+                    hintText: AppStrings.mountYourArgument(context),
+                    hintStyle:
+                        const TextStyle(color: ThemeConstants.textDisabled),
                     border: InputBorder.none,
                     isDense: true,
                   ),
@@ -441,9 +443,9 @@ class _ArenaPageState extends State<ArenaPage> {
           children: [
             Row(
               children: [
-                const Text(
-                  'WEAKNESS DOSSIER',
-                  style: TextStyle(
+                Text(
+                  AppStrings.weaknessDossier(context),
+                  style: const TextStyle(
                     color: ThemeConstants.arenaAccent,
                     fontSize: 13,
                     fontWeight: FontWeight.bold,

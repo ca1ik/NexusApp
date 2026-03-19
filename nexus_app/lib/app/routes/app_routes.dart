@@ -5,4 +5,5 @@ abstract final class AppRoutes {
   static const String fracture = '/fracture';
   static const String arena = '/arena';
   static const String paywall = '/paywall';
+  static const String settings = '/settings';
 }

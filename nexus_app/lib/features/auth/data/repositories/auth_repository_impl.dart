@@ -7,7 +7,7 @@ import 'package:nexus_app/features/auth/domain/repositories/auth_repository.dart
 
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({required FirebaseAuthDataSource dataSource})
-    : _ds = dataSource;
+      : _ds = dataSource;
 
   final FirebaseAuthDataSource _ds;
 
@@ -22,9 +22,19 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<AuthFailure, UserEntity>> signInWithEmailAndPassword({
     required String email,
     required String password,
-  }) => _attempt(
-    () => _ds.signInWithEmailAndPassword(email: email, password: password),
-  );
+  }) =>
+      _attempt(
+        () => _ds.signInWithEmailAndPassword(email: email, password: password),
+      );
+
+  @override
+  Future<Either<AuthFailure, UserEntity>> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) =>
+      _attempt(
+        () => _ds.signUpWithEmailAndPassword(email: email, password: password),
+      );
 
   @override
   Future<Either<AuthFailure, void>> signOut() async {
